@@ -1,0 +1,48 @@
+#DatePicker {
+  border-collapse: seperate;
+  border-spacing: 0;
+}
+#DatePicker caption {
+  position: relative;
+  height: 30px;
+  line-height: 30px;
+}
+#DatePicker caption a {
+  text-decoration: none;
+}
+#DatePicker caption .pre-month {
+  position: absolute;
+  left: 1em;
+}
+#DatePicker caption .next-month {
+  position: absolute;
+  right: 1em;
+}
+#DatePicker th,
+#DatePicker td {
+  margin: 0;
+  padding: 0;
+}
+#DatePicker thead th {
+  font-size: 0.875em;
+}
+#DatePicker tbody td {
+  padding-top: .4em;
+  padding-right: 5px;
+}
+#DatePicker .aweek a {
+  display: block;
+  text-decoration: none;
+  text-align: right;
+  color: #000;
+  line-height: 20px;
+  width: 20px;
+  padding: .1em;
+  border-radius: 5px;
+}
+#DatePicker .aweek .disabled {
+  color: transparent;
+}
+#DatePicker .aweek .actived {
+  background: #eee;
+}

@@ -33,6 +33,17 @@ grunt watch
 ```
 
 Use testacular to test the code:
+
+install
+
 ```shell
 npm install -g testacular
 ```
+
+run test suite
+
+```shell
+testacular start
+```
+
+

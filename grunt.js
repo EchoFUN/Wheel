@@ -21,7 +21,7 @@ module.exports = function(grunt) {
       cancat: {
         files: '<config:concat.dist.src>',
         tasks: 'concat'
-      },
+      }
 //      less: {
 //        files: ['less/*.less', 'js/src/ui-date-picker/less/*.less'],
 //        tasks: 'less'

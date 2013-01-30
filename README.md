@@ -13,7 +13,7 @@ Learn & Fun
 
 Use this to run all the test
 
-```shell
+```bash
 testacular start
 ```
 
@@ -23,12 +23,12 @@ Use grunt to build the code:
 
 install
 
-```shell
+```bash
 npm install -g grunt
 ```
 
 watch and build:
-```shell
+```bash
 grunt watch
 ```
 
@@ -36,13 +36,13 @@ Use testacular to test the code:
 
 install
 
-```shell
+```bash
 npm install -g testacular
 ```
 
 run test suite
 
-```shell
+```bash
 testacular start
 ```
 

@@ -16,40 +16,39 @@
               'key': 'this is value of context'
             }
 
-        q.push(function() {
-            console.log(this.key)
-        }, 0, context)
+        q
 
-        .push(function() {
-            console.log(this.key)
-        }, 1000, context)
+        .pushSync(function() {
+          console.log(this.key)
+        }, 2000, context)
 
-        .push(function() {
-            console.log('after 1000 second')
-        }, 1000)
+        .pushSync(function () {
+          console.log('hello world')
+        }, 2000)
 
-        .push(function() {
-            console.log('after 1000 second')
-            return 'this is return value before delay'
-        }, 1000)
+        .pushSync(function() {
+           console.log('i am going to return aaa')
+           return 'aaa'
+         })
 
-        .delay(1000)
+        .delay(2000)
 
-        .push(function(val) {
-            console.log(val)
-            return 'this is return value'
-        }, 1000)
+        .pushSync(function(val) {
+           console.log('this is val from prev function:' + val)
+           return 'give it to async'
+         })
 
-        .push(function(val, next) {
-            setTimeout(function() {
-                console.log('setTimeout goto next')
-                next('return value frome async method')
-            }, 1000);
-        })
+        .pushAsync(function(val, next) {
 
-        .push(function(val) {
-            console.log(val)
-        }, 1000)
+           setTimeout(function() {
+               console.log('from sync:' + val)
+               next('aaa', 'bbb', 'ccc')
+           }, 2000)
+         })
+
+        .pushSync(function(valA, valB, valC) {
+            console.log(valA + valB + valC)
+         })
 
         .exec()
 

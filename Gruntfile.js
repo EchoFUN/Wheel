@@ -22,16 +22,13 @@ module.exports = function(grunt) {
         files: '<config:concat.dist.src>',
         tasks: 'concat'
       }
-//      less: {
-//        files: ['less/*.less', 'js/src/ui-date-picker/less/*.less'],
-//        tasks: 'less'
-//      }
+      less: {
+        files: ['less/*.less', 'js/src/ui-date-picker/less/*.less'],
+        tasks: 'less'
+      }
     }
   });
 
-  // less task
-  //  grunt.loadNpmTasks('grunt-contrib-less');
-  // Default task.
   grunt.registerTask('default', 'concat'/*less*/);
 
 }

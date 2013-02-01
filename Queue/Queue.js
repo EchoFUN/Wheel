@@ -46,7 +46,7 @@ function Queue() {
     fnQueue.push(function(){
       var args = toArray.call(arguments, 0)
       window.setTimeout(function() {
-        next.apply(context ? context : this , args);
+        next.apply(context ? context : this , args)
       }, milliSec)
     })
     return this

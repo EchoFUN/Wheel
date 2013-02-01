@@ -16,8 +16,8 @@ files = [
   'ui-date-picker/unit/date-util.js',
 
   // Queue test
-  'Queue/Queue.js',
-  '../Queue/Queue.js'
+  '../Queue/Queue.js',
+  'Queue/unit/queue-test.js'
 ];
 
 

@@ -35,7 +35,7 @@ module.exports = function(grunt) {
         tasks: 'concat'
       },
       testacular:{
-        files:['Queue/*.js', 'ui-date-picker/*.js', 'test/*/unit/*.js'],
+        files:['Queue/*.js', 'ui-date-picker/*.js'],
         tasks:['testacular:unit:run']       //NOTE the :run flag
       }
     }
@@ -44,7 +44,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-concat');
 //  grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-watch');
-//  grunt.loadNpmTasks('gruntacular');
+  grunt.loadNpmTasks('gruntacular');
 
   grunt.registerTask('default', 'concat');
 

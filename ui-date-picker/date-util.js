@@ -3,6 +3,12 @@
  * @author <a href="http://www.closure.pro">Closure Man</a>
  * @version 0.0.1
  */
+
+
+
+
+
+
 // 获取本月的所有日期
 // 从今天开始，遍历到前一月的最后一天，遍历到下一月的第一天
 function today() {
@@ -31,6 +37,7 @@ function lastDayOfMonth(date) {
   d.setDate(0)
   return d
 }
+
 
 /**
  * 获取某个月有多少天

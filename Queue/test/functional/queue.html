@@ -1,0 +1,62 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+
+    <script type="text/javascript" src="../../Queue.js">
+    </script>
+
+
+    <script type="text/javascript">
+
+
+        var q = Queue()
+          , context = {
+              'key': 'this is value of context'
+            }
+
+        q.push(function() {
+            console.log(this.key)
+        }, 0, context)
+
+        .push(function() {
+            console.log(this.key)
+        }, 1000, context)
+
+        .push(function() {
+            console.log('after 1000 second')
+        }, 1000)
+
+        .push(function() {
+            console.log('after 1000 second')
+            return 'this is return value before delay'
+        }, 1000)
+
+        .delay(1000)
+
+        .push(function(val) {
+            console.log(val)
+            return 'this is return value'
+        }, 1000)
+
+        .push(function(val, next) {
+            setTimeout(function() {
+                console.log('setTimeout goto next')
+                next('return value frome async method')
+            }, 1000);
+        })
+
+        .push(function(val) {
+            console.log(val)
+        }, 1000)
+
+        .exec()
+
+
+    </script>
+</head>
+<body>
+
+</body>
+</html>

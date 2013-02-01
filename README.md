@@ -17,33 +17,20 @@ Use this to run all the test
 testacular start
 ```
 
-### Make The Wheel With Me? ###
+### Contribute ###
 
 Use grunt to build the code:
 
 install
 
 ```bash
-npm install -g grunt
+npm install
 ```
 
-watch and build:
-```bash
-grunt watch
-```
-
-Use testacular to test the code:
-
-install
+install testacular
 
 ```bash
 npm install -g testacular
-```
-
-run test suite
-
-```bash
-testacular start
-```
+``
 
 

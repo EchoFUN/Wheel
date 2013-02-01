@@ -3,16 +3,21 @@
 
 
 // base path, that will be used to resolve files and exclude
-basePath = '.';
+basePath = './test/';
 
 
 // list of files / patterns to load in the browser
 files = [
   JASMINE,
   JASMINE_ADAPTER,
-  // 关于日期的 util 测试
-  'date-util.js',
-  'test/unit/date-util.js'
+
+  // date-picker-script
+  '../ui-date-picker/date-util.js',
+  'ui-date-picker/unit/date-util.js',
+
+  // Queue test
+  'Queue/Queue.js',
+  '../Queue/Queue.js'
 ];
 
 
@@ -20,7 +25,6 @@ files = [
 exclude = [
   
 ];
-
 
 // test results reporter to use
 // possible values: 'dots', 'progress', 'junit'
@@ -56,7 +60,7 @@ autoWatch = true;
 // - Safari (only Mac)
 // - PhantomJS
 // - IE (only Windows)
-browsers = ['Chrome','ChromeCanary', 'Firefox', 'Safari', 'PhantomJS'];
+browsers = ['Chrome', 'PhantomJS'];
 
 
 // If browser does not capture in given timeout [ms], kill it

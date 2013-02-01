@@ -23,7 +23,6 @@ function Queue() {
     return '[object Function]' === toString.call(obj)
   }
 
-
   function Executor(fnType, fn, context) {
     if (this instanceof Executor) {
       var self = this

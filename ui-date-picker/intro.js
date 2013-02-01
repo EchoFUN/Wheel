@@ -1,3 +1,3 @@
-(function(root) {
+(function(root, undefined) {
 
 "use strict";

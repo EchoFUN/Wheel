@@ -4,31 +4,48 @@ module.exports = function(grunt) {
     concat: {
       dist: {
         src: [
-          'js/src/ui-date-picker/intro.js',
-          'js/src/ui-date-picker/date-util.js',
-          'js/src/ui-date-picker/date-picker-calendar.js',
-          'js/src/ui-date-picker/outtro.js'
+          'ui-date-picker/intro.js',
+          'ui-date-picker/date-util.js',
+          'ui-date-picker/date-picker-calendar.js',
+          'ui-date-picker/outtro.js'
         ],
-        dest:  'js/src/ui-date-picker/date-picker.js'
+        dest:  'ui-date-picker/date-picker.js'
+      },
+
+      dist: {
+        src: [
+          'Queue/intro.js',
+          'Queue/Queue.js',
+          'Queue/outro.js'
+        ],
+        dest: 'Queue/queue-dev.js'
+
       }
     },
-//    less: {
-//      'css/do-what.css': 'less/do-what.less',
-//      'js/src/ui-date-picker/date-picker.css': 'js/src/ui-date-picker/less/date-picker.less'
-//    },
+
+    testacular: {
+      unit: {
+        configFile: 'testacular.conf.js'
+      }
+    },
 
     watch: {
       cancat: {
-        files: '<config:concat.dist.src>',
+        files: ['Queue/*.js', 'ui-date-picker/*.js'],
         tasks: 'concat'
-      }
-      less: {
-        files: ['less/*.less', 'js/src/ui-date-picker/less/*.less'],
-        tasks: 'less'
+      },
+      testacular:{
+        files:['Queue/*.js', 'ui-date-picker/*.js', 'test/*/unit/*.js'],
+        tasks:['testacular:unit:run']       //NOTE the :run flag
       }
     }
   });
 
-  grunt.registerTask('default', 'concat'/*less*/);
+  grunt.loadNpmTasks('grunt-contrib-concat');
+//  grunt.loadNpmTasks('grunt-contrib-less');
+  grunt.loadNpmTasks('grunt-contrib-watch');
+//  grunt.loadNpmTasks('gruntacular');
+
+  grunt.registerTask('default', 'concat');
 
 }

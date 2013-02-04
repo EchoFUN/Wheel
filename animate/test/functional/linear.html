@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <style type="text/css">
+       #move-me {
+           position: absolute;
+           left: 10px;
+           top: 100px;
+           width: 50px;
+           height: 50px;
+           background: #ABCDEF;
+       }
+
+       #move-me-pow {
+           position: absolute;
+           left: 10px;
+           top: 200px;
+           width: 50px;
+           height: 50px;
+           background: #ABCDEF;
+       }
+    </style>
+</head>
+<body>
+
+<div id="move-me"></div>
+<div id="move-me-pow"></div>
+<script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
+<script type="text/javascript" src="../../../Queue/Queue.js"></script>
+<script type="text/javascript" src="../../animate.js"></script>
+<script type="text/javascript">
+    $(function() {
+        sqrtAnimate(document.getElementById('move-me'), 0.5, {
+            distance: 300,
+            fn: function() {
+//                alert('done with context:' + this.haha)
+            },
+            context: { haha : 'haha' }
+         })
+
+
+        powAnimate(document.getElementById('move-me-pow'), 0.5, {
+            distance: 300,
+            fn: function() {
+                //                alert('done with context:' + this.haha)
+            },
+            context: { haha : 'haha' }
+        })
+    })
+</script>
+
+</body>
+</html>

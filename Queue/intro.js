@@ -1,4 +1,4 @@
-(function(window, undefined) {
+(function(root, undefined) {
   "use strict";
 
 

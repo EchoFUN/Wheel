@@ -57,28 +57,12 @@ var AnimateMath = {
 }
 
 
-/**
- *
- * @param elem
- * @param time
- * @param distance
- * @param fn
- */
 var defaultOptions = {
     distance: null
   , fn: null
   , context: null
 }
 
-
-/**
- *
- * @param elem
- * @param type
- * @param time
- * @param fn
- * @constructor
- */
 function Animate(elem, type, time, options) {
   // jq
   var left = parseInt($(elem).css('left'), 10)

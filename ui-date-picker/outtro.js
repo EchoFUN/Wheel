@@ -1,4 +1,5 @@
-root.DatePicker = DatePicker;
+
+window.DatePicker = DatePicker;
 
 
-})(window);
+})(window.jQuery, undefined);

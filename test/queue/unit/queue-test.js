@@ -13,18 +13,32 @@ describe('queue sync test suite', function() {
 
   it('should be get the hello world from the return value of the pre step', function() {
     var expectWord = 'hello world'
+      , finalWord = null
+      , flag = false
 
-    q
-      .pushSync(function() {
-        return expectWord
-      })
-      .pushSync(function(val) {
-        expect(val).toBe(expectWord)
-        return val
-      })
-      .pushSync(function(val) {
-         expect(val).toBe(expectWord)
-      })
+    runs(function() {
+      q
+        .pushSync(function() {
+          return expectWord
+        })
+        .pushSync(function(val) {
+          return val
+        })
+        .pushSync(function(val) {
+          finalWord = expectWord
+          flag = true
+        })
+        .exec()
+    })
+
+    waitsFor(function() {
+      return flag
+    }, 'should done in 10 msec', 10)
+
+    runs(function() {
+      expect(expectWord).toBe(finalWord)
+    })
+
   })
 
   it('should get the hello world from the pre steps next function', function() {
@@ -41,6 +55,7 @@ describe('queue sync test suite', function() {
       .pushSync(function(val, next) {
         expect(val).toBe(expectWord)
       })
+      .exec()
   })
 
   it('should get the hello world from the pre function', function() {
@@ -127,8 +142,9 @@ describe('Delay Test Suite', function() {
 })
 
 
-
-
+/**
+ * Async test suite
+ */
 describe('Async Push Test Suite', function() {
   "use strict";
 
@@ -193,6 +209,10 @@ describe('Async Push Test Suite', function() {
 
     runs(function() {
       expect(arr.length).toBe(10)
+      expect(arr[0]).toBe(0)
+      expect(arr[1]).toBe(1)
+      expect(arr[9]).toBe(9)
+      expect(arr[10]).not.toBeDefined()
     })
 
   })

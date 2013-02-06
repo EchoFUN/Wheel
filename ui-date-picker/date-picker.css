@@ -23,6 +23,9 @@
   margin: 0;
   padding: 0;
 }
+#DatePicker thead {
+  border-bottom: 1px solid #001100;
+}
 #DatePicker thead th {
   font-size: 0.875em;
 }

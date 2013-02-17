@@ -1,4 +1,7 @@
-
+/**
+ * block elements regular expressions
+ * @type {RegExp}
+ */
 var TITLE_REGEXP = /^([#]{1,6})\s*([^#\s][\w\W]*[^#])([#]*)/
   , CODEBLOCK_START_REGEXP = /^[`]{3,}([^`]+)/
   , CODEBLOCK_END_REGEXP = /^[`]{3,}$/
@@ -6,6 +9,8 @@ var TITLE_REGEXP = /^([#]{1,6})\s*([^#\s][\w\W]*[^#])([#]*)/
   , UL_LIST_REGEXP = /^([*+-])((\s+)[\W\w]+|[^+*-][\w\W]*)/
   , OL_LIST_REGEXP = /^(\d+)\.(\s*)([\W\w]*)/
   , INDENT_REGEXP  = /^(\s{4}|\t)+/
+
+var ANCHOR_REGEXP = /(\[([^\]]+)\]\s?(\[([^\]]+)\]|\(([\w\/\:\.]+)\s*([^)]+)*?\)))/
 
 function md2html(mdStr) {
 
@@ -61,12 +66,10 @@ function getListContent(line) {
 }
 
 function createList(type) {
-
   return type == 'ol' ? new OrderedList()
                       : type == 'ul'
                       ? new UnOrderedList()
                       : null
-
 }
 
 function buildList(listType, lines, i, root) {

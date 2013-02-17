@@ -100,9 +100,15 @@ var ElemParser = util.Class.extend({
       this.parent = null
       this.children = []
       this.lines = []
+      this.anchors = []
     }
 
   , push : function(line) {
+      if (ANCHOR_REGEXP.test(line)) {
+        this.anchors.push(
+          new Anchor(line)
+        )
+      }
       this.lines.push(line)
     }
 
@@ -245,14 +251,44 @@ var ListItem = ElemParser.extend({
 })
 
 
+var Anchor = util.Class.extend({
 
+    init: function(line) {
+      var matches = line.match(ANCHOR_REGEXP)
 
+      this.line = matches[1]
+      this.text = matches[2]
+      this.attr = matches[3]
+      if (matches[4]) {
+        this.id = matches[4]
+        this.type = 'id'
+      }
+      this.href = matches[5]
+      this.title = matches[6]
+    }
 
+  , parse: function() {
+      var anchorObj = this
+      if (this.type == 'id') {
+        anchorObj = Anchor.mapping[this.id]
+      }
+      return [
+          '<a'
+        , ' href="', anchorObj.href, '"'
+        , anchorObj.title ? (' title=' + anchorObj.title) : ''
+        , '>'
+        , anchorObj.text
+        , '</a>'
+      ].join('')
+    }
+})
 
-
-
-
-
+// anchor map for ids
+Anchor.mapping = {}
+/**
+ * block elements regular expressions
+ * @type {RegExp}
+ */
 var TITLE_REGEXP = /^([#]{1,6})\s*([^#\s][\w\W]*[^#])([#]*)/
   , CODEBLOCK_START_REGEXP = /^[`]{3,}([^`]+)/
   , CODEBLOCK_END_REGEXP = /^[`]{3,}$/
@@ -260,6 +296,8 @@ var TITLE_REGEXP = /^([#]{1,6})\s*([^#\s][\w\W]*[^#])([#]*)/
   , UL_LIST_REGEXP = /^([*+-])((\s+)[\W\w]+|[^+*-][\w\W]*)/
   , OL_LIST_REGEXP = /^(\d+)\.(\s*)([\W\w]*)/
   , INDENT_REGEXP  = /^(\s{4}|\t)+/
+
+var ANCHOR_REGEXP = /(\[([^\]]+)\]\s?(\[([^\]]+)\]|\(([\w\/\:\.]+)\s*([^)]+)*?\)))/
 
 function md2html(mdStr) {
 
@@ -315,12 +353,10 @@ function getListContent(line) {
 }
 
 function createList(type) {
-
   return type == 'ol' ? new OrderedList()
                       : type == 'ul'
                       ? new UnOrderedList()
                       : null
-
 }
 
 function buildList(listType, lines, i, root) {

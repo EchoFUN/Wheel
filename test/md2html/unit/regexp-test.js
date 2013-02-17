@@ -260,6 +260,72 @@ describe('indent regexp test', function() {
 })
 
 
+/**
+ * inline test
+ */
+
+describe('anchor test suite', function() {
+  "use strict";
+
+  it ('should match [content](http://google.com)', function() {
+    var line = "[content](http://google.com)"
+    expect(ANCHOR_REGEXP.test(line)).toBe(true)
+    expect(line.match(ANCHOR_REGEXP)[1]).toBe(line)
+    expect(line.match(ANCHOR_REGEXP)[2]).toBe('content')
+    expect(line.match(ANCHOR_REGEXP)[3]).toBe('(http://google.com)')
+    expect(line.match(ANCHOR_REGEXP)[4]).not.toBeDefined()
+    expect(line.match(ANCHOR_REGEXP)[5]).toBe('http://google.com')
+    expect(line.match(ANCHOR_REGEXP)[6]).not.toBeDefined()
+  })
+
+
+  it ('should match [content](http://google.com "google.inc")', function() {
+    var line = '[content](http://google.com "google.inc")'
+    expect(ANCHOR_REGEXP.test(line)).toBe(true)
+    expect(line.match(ANCHOR_REGEXP)[1]).toBe(line)
+    expect(line.match(ANCHOR_REGEXP)[2]).toBe('content')
+    expect(line.match(ANCHOR_REGEXP)[3]).toBe('(http://google.com "google.inc")')
+    expect(line.match(ANCHOR_REGEXP)[4]).not.toBeDefined()
+    expect(line.match(ANCHOR_REGEXP)[5]).toBe('http://google.com')
+    expect(line.match(ANCHOR_REGEXP)[6]).toBe('"google.inc"')
+  })
+
+  it ('should match [content][id]', function() {
+    var line = '[content][id]'
+    expect(ANCHOR_REGEXP.test(line)).toBe(true)
+    expect(line.match(ANCHOR_REGEXP)[1]).toBe(line)
+    expect(line.match(ANCHOR_REGEXP)[2]).toBe('content')
+    expect(line.match(ANCHOR_REGEXP)[3]).toBe('[id]')
+    expect(line.match(ANCHOR_REGEXP)[4]).toBe('id')
+    expect(line.match(ANCHOR_REGEXP)[5]).not.toBeDefined()
+    expect(line.match(ANCHOR_REGEXP)[6]).not.toBeDefined()
+  })
+
+  it ('should match [content] [id]', function() {
+    var line = '[content] [id]'
+    expect(ANCHOR_REGEXP.test(line)).toBe(true)
+    expect(line.match(ANCHOR_REGEXP)[1]).toBe(line)
+    expect(line.match(ANCHOR_REGEXP)[2]).toBe('content')
+    expect(line.match(ANCHOR_REGEXP)[3]).toBe('[id]')
+    expect(line.match(ANCHOR_REGEXP)[4]).toBe('id')
+    expect(line.match(ANCHOR_REGEXP)[5]).not.toBeDefined()
+    expect(line.match(ANCHOR_REGEXP)[6]).not.toBeDefined()
+  })
+
+  it('should match the anchor in the mix line', function() {
+    var line = 'fdadsafdsa[content](http://google.com "google.inc")'
+    expect(ANCHOR_REGEXP.test(line)).toBe(true)
+    expect(line.match(ANCHOR_REGEXP)[1]).toBe('[content](http://google.com "google.inc")')
+    expect(line.match(ANCHOR_REGEXP)[2]).toBe('content')
+    expect(line.match(ANCHOR_REGEXP)[3]).toBe('(http://google.com "google.inc")')
+    expect(line.match(ANCHOR_REGEXP)[4]).not.toBeDefined()
+    expect(line.match(ANCHOR_REGEXP)[5]).toBe('http://google.com')
+    expect(line.match(ANCHOR_REGEXP)[6]).toBe('"google.inc"')
+  })
+
+})
+
+
 
 
 

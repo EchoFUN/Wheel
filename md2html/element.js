@@ -90,9 +90,15 @@ var ElemParser = util.Class.extend({
       this.parent = null
       this.children = []
       this.lines = []
+      this.anchors = []
     }
 
   , push : function(line) {
+      if (ANCHOR_REGEXP.test(line)) {
+        this.anchors.push(
+          new Anchor(line)
+        )
+      }
       this.lines.push(line)
     }
 
@@ -235,9 +241,37 @@ var ListItem = ElemParser.extend({
 })
 
 
+var Anchor = util.Class.extend({
 
+    init: function(line) {
+      var matches = line.match(ANCHOR_REGEXP)
 
+      this.line = matches[1]
+      this.text = matches[2]
+      this.attr = matches[3]
+      if (matches[4]) {
+        this.id = matches[4]
+        this.type = 'id'
+      }
+      this.href = matches[5]
+      this.title = matches[6]
+    }
 
+  , parse: function() {
+      var anchorObj = this
+      if (this.type == 'id') {
+        anchorObj = Anchor.mapping[this.id]
+      }
+      return [
+          '<a'
+        , ' href="', anchorObj.href, '"'
+        , anchorObj.title ? (' title=' + anchorObj.title) : ''
+        , '>'
+        , anchorObj.text
+        , '</a>'
+      ].join('')
+    }
+})
 
-
-
+// anchor map for ids
+Anchor.mapping = {}

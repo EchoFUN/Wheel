@@ -20,6 +20,7 @@ files = [
   'Queue/unit/queue-test.js',
 
   //md2html test
+  '../md2html/element.js',
   '../md2html/md2html.js',
   'md2html/unit/regexp-test.js',
   'md2html/unit/parse-test.js'

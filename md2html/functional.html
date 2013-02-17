@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+</head>
+<body>
+
+<script type="text/javascript" src="element.js"></script>
+<script type="text/javascript" src="md2html.js"></script>
+<script type="text/javascript">
+  window.onload = function() {
+    document.body.innerHTML = md2html([
+        '### this is title'
+      , 'this is paragraph'
+      , '* this is ul'
+      , '*this is ul again'
+      , 'this is paragraph again'
+      , '1. this is list item'
+      , '2. this is list item again'
+      , '```js'
+      , '// this is javascript code block'
+      , 'function Add() {'
+      , '  return Array.prototype.slice(arguments,0);'
+      , '}'
+      , '```'
+      , '# h1 again'
+    ].join('\n'))
+  }
+
+</script>
+</body>
+</html>

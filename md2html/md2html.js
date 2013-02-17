@@ -1,4 +1,3 @@
-"use strict";
 
 var TITLE_REGEXP = /^([#]{1,6})\s*([^#\s][\w\W]*[^#])([#]*)/
   , CODEBLOCK_START_REGEXP = /^[`]{3,}([^`]+)/
@@ -12,50 +11,15 @@ function md2html(mdStr) {
 
   var lines = mdStr.split(/[\n|\r\n]/)
     , root  = new ElemParser()
-
   root = buildBlockTree(root, lines)
-
   return root.parse()
 }
 
-/**
- * 判断这一行是否是 markdown 标题 (以 # 号开始）
- * @param {String} line
- * @return {Boolean}
- */
+
 function isTitle(line) {
   return TITLE_REGEXP.test(line)
 }
 
-/**
- * 单纯的转换函数
- * @param {String} line 该字符串需经过 isTitle 方法判断结果为 true 的时候使用，用于生成h标签
- * @param {String} className 类名属性，用户自定
- * @return {String}
- */
-function parseTitle(line, className) {
-  var matches = line.match(TITLE_REGEXP)
-    , h       = '<h' + matches[1].length + (className ? (' class="'+ className +'"') : '') + '>'
-    , hend    = '</h' + matches[1].length + '>'
-    , title   = matches[2].trim()
-
-  return [h, title, hend].join('')
-}
-
-/**
- * 判断是否为 codeblock
- * 这里使用的 codeblock 是 github 格式的
- *
- * ```js
- * // code here
- * function Code() {}
- * ```
- *
- * ```[lang]
- *
- * ```
- *
- */
 function isCodeBlockStart(line) {
   return CODEBLOCK_START_REGEXP.test(line)
 }
@@ -68,17 +32,9 @@ function isBlockQuote(line) {
   return BLOCKQUOTE_REGEXP.test(line)
 }
 
-/**
- * 获取
- * @param title
- * @return {*}
- */
 function getCodeLang(title) {
   return title.match(CODEBLOCK_START_REGEXP)[1]
 }
-
-
-
 
 function getListType(line) {
   if (OL_LIST_REGEXP.test(line)) {
@@ -90,6 +46,10 @@ function getListType(line) {
   else {
     return ''
   }
+}
+
+function isIndent(line) {
+  return INDENT_REGEXP.test(line)
 }
 
 function getListContent(line) {
@@ -107,10 +67,6 @@ function createList(type) {
                       ? new UnOrderedList()
                       : null
 
-}
-
-function isIndent(line) {
-  return INDENT_REGEXP.test(line)
 }
 
 function buildList(listType, lines, i, root) {
@@ -139,13 +95,6 @@ function buildList(listType, lines, i, root) {
   return {i:i-1};
 }
 
-/**
- * 创建块引用对象
- * @param lines
- * @param i
- * @param root
- * @return {Object}
- */
 function buildBlockQuote(lines, i, root) {
   var blockQuote = new BlockQuote()
   while (isBlockQuote(lines[i])) {

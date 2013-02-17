@@ -20,6 +20,16 @@ module.exports = function(grunt) {
         ],
         dest: 'Queue/queue-dev.js'
 
+      },
+
+      dist: {
+        src: [
+          'md2html/intro.js',
+          'md2html/element.js',
+          'md2html/md2html.js',
+          'md2html/outro.js'
+        ],
+        dest: 'md2html/build/md2html.js'
       }
     },
 
@@ -31,7 +41,11 @@ module.exports = function(grunt) {
 
     watch: {
       cancat: {
-        files: ['Queue/*.js', 'ui-date-picker/*.js'],
+        files: [
+            'Queue/*.js'
+          , 'ui-date-picker/*.js'
+          , 'md2html/*.js'
+        ],
         tasks: 'concat'
       },
       testacular:{

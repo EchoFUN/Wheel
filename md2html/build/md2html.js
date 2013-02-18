@@ -84,13 +84,20 @@ var ElemParser = util.Class.extend({
       var oldParse = this.parse
         , parse = function() {
           var self = this
-          if (this.children) {
+          if (this.hasSub && this.children) {
             each(this.children, function(child) {
               self.push(child.parse())
             }, this)
           }
 
           var result = oldParse.apply(this, arguments)
+
+          if(this.hasSub && this.anchors.length) {
+            each(this.anchors, function(anchor) {
+              var html = anchor.parse()
+              result = result.replace(anchor.line, html)
+            })
+          }
 
           return result
         }
@@ -101,6 +108,7 @@ var ElemParser = util.Class.extend({
       this.children = []
       this.lines = []
       this.anchors = []
+      this.hasSub = true
     }
 
   , push : function(line) {
@@ -209,6 +217,7 @@ var CodeBlock = ElemParser.extend({
     tagName: 'code'
   , init : function() {
       this._super()
+      this.hasSub = false
     }
   , parse: function() {
       var className = this.className
@@ -254,30 +263,49 @@ var ListItem = ElemParser.extend({
 var Anchor = util.Class.extend({
 
     init: function(line) {
-      var matches = line.match(ANCHOR_REGEXP)
+      if (ANCHOR_REGEXP.test(line)) {
+        this.initWithNormalAnchor(line)
+      }
+      else if (ANCHOR_DEF_REGEXP.test(line)) {
+        this.initWithDefineAnchor(line)
+      }
+    }
 
+  , initWithNormalAnchor: function(line) {
+      var matches = line.match(ANCHOR_REGEXP)
       this.line = matches[1]
       this.text = matches[2]
       this.attr = matches[3]
-      if (matches[4]) {
-        this.id = matches[4]
-        this.type = 'id'
+      if (typeof matches[4] != 'undefined') {
+        this.id = matches[4] == '' ? this.text : matches[4]
       }
       this.href = matches[5]
       this.title = matches[6]
     }
 
+  , initWithDefineAnchor: function(line) {
+
+      var matches = line.match(ANCHOR_DEF_REGEXP)
+      this.id = matches[1].toLowerCase()
+      this.href = matches[2].replace(/[<>]/g, '')
+      this.title = matches[4] ? ['"', matches[4].slice(1, matches[4].length - 1), '"'].join('')
+                              : undefined
+
+      Anchor.mapping[this.id] = this
+    }
+
   , parse: function() {
       var anchorObj = this
-      if (this.type == 'id') {
-        anchorObj = Anchor.mapping[this.id]
+      if (this.id) {
+        anchorObj = Anchor.mapping[this.id.toLowerCase()]
       }
+
       return [
           '<a'
         , ' href="', anchorObj.href, '"'
         , anchorObj.title ? (' title=' + anchorObj.title) : ''
         , '>'
-        , anchorObj.text
+        , this.text
         , '</a>'
       ].join('')
     }
@@ -296,8 +324,11 @@ var TITLE_REGEXP = /^([#]{1,6})\s*([^#\s][\w\W]*[^#])([#]*)/
   , UL_LIST_REGEXP = /^([*+-])((\s+)[\W\w]+|[^+*-][\w\W]*)/
   , OL_LIST_REGEXP = /^(\d+)\.(\s*)([\W\w]*)/
   , INDENT_REGEXP  = /^(\s{4}|\t)+/
+  , H1_UNDERLINE_REGEXP = /^[=]{3,}$/
+  , H2_UNDERLINE_REGEXP = /^[-]{3,}$/
 
-var ANCHOR_REGEXP = /(\[([^\]]+)\]\s?(\[([^\]]+)\]|\(([\w\/\:\.]+)\s*([^)]+)*?\)))/
+var ANCHOR_REGEXP = /(\[([^\]]+)\]\s?(\[([^\]]*)\]|\(([\w\/\:\.]+)\s*([^)]+)*?\)))/
+  , ANCHOR_DEF_REGEXP = /^\[([^\]]+)\]\s*:\s*([\S]+|<[^>]+>)(\s+("[^"]+"|'[^']+'|\([^\)]+\)))?$/
 
 function md2html(mdStr) {
 
@@ -322,6 +353,10 @@ function isCodeBlockEnd(line) {
 
 function isBlockQuote(line) {
   return BLOCKQUOTE_REGEXP.test(line)
+}
+
+function isAnchorDef(line) {
+  return ANCHOR_DEF_REGEXP.test(line)
 }
 
 function getCodeLang(title) {
@@ -417,6 +452,20 @@ function buildTitle(lines, i, root) {
   root.children.push(title)
   return title;
 }
+
+
+function buildSingleLineHn(lines, i, root, n) {
+  var title = null
+  if (lines[i - 1] &&
+      root.children[root.children.length - 1] instanceof Paragraph) {
+    title = new Title()
+    title.tagName = 'h' + n
+    title.push(lines[i - 1])
+    root.children[root.children.length - 1] = title
+    title.parent = root
+  }
+  return title;
+}
 /**
  * 构建文档树
  * @param root
@@ -441,6 +490,12 @@ function buildBlockTree(root, lines) {
     else if (isTitle(lines[i])) {
       title = buildTitle(lines, i, root);
     }
+    else if (H1_UNDERLINE_REGEXP.test(lines[i]) && lines[i-1].trim()) {
+      title = buildSingleLineHn(lines, i, root, 1);
+    }
+    else if (H2_UNDERLINE_REGEXP.test(lines[i]) && lines[i-1].trim) {
+      title = buildSingleLineHn(lines, i, root, 2);
+    }
     // > this is block quote
     // > this is block quote again
     else if (isBlockQuote(lines[i])) {
@@ -452,6 +507,10 @@ function buildBlockTree(root, lines) {
     else if (listType = getListType(lines[i])) {
       ret = buildList(listType, lines, i, root);
       i = ret.i;
+    }
+    // Anchor Definition
+    else if (isAnchorDef(lines[i])) {
+      new Anchor(lines[i])
     }
     else {
       paragraph = new Paragraph()

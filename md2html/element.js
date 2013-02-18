@@ -74,13 +74,20 @@ var ElemParser = util.Class.extend({
       var oldParse = this.parse
         , parse = function() {
           var self = this
-          if (this.children) {
+          if (this.hasSub && this.children) {
             each(this.children, function(child) {
               self.push(child.parse())
             }, this)
           }
 
           var result = oldParse.apply(this, arguments)
+
+          if(this.hasSub && this.anchors.length) {
+            each(this.anchors, function(anchor) {
+              var html = anchor.parse()
+              result = result.replace(anchor.line, html)
+            })
+          }
 
           return result
         }
@@ -91,6 +98,7 @@ var ElemParser = util.Class.extend({
       this.children = []
       this.lines = []
       this.anchors = []
+      this.hasSub = true
     }
 
   , push : function(line) {
@@ -199,6 +207,7 @@ var CodeBlock = ElemParser.extend({
     tagName: 'code'
   , init : function() {
       this._super()
+      this.hasSub = false
     }
   , parse: function() {
       var className = this.className
@@ -244,30 +253,49 @@ var ListItem = ElemParser.extend({
 var Anchor = util.Class.extend({
 
     init: function(line) {
-      var matches = line.match(ANCHOR_REGEXP)
+      if (ANCHOR_REGEXP.test(line)) {
+        this.initWithNormalAnchor(line)
+      }
+      else if (ANCHOR_DEF_REGEXP.test(line)) {
+        this.initWithDefineAnchor(line)
+      }
+    }
 
+  , initWithNormalAnchor: function(line) {
+      var matches = line.match(ANCHOR_REGEXP)
       this.line = matches[1]
       this.text = matches[2]
       this.attr = matches[3]
-      if (matches[4]) {
-        this.id = matches[4]
-        this.type = 'id'
+      if (typeof matches[4] != 'undefined') {
+        this.id = matches[4] == '' ? this.text : matches[4]
       }
       this.href = matches[5]
       this.title = matches[6]
     }
 
+  , initWithDefineAnchor: function(line) {
+
+      var matches = line.match(ANCHOR_DEF_REGEXP)
+      this.id = matches[1].toLowerCase()
+      this.href = matches[2].replace(/[<>]/g, '')
+      this.title = matches[4] ? ['"', matches[4].slice(1, matches[4].length - 1), '"'].join('')
+                              : undefined
+
+      Anchor.mapping[this.id] = this
+    }
+
   , parse: function() {
       var anchorObj = this
-      if (this.type == 'id') {
-        anchorObj = Anchor.mapping[this.id]
+      if (this.id) {
+        anchorObj = Anchor.mapping[this.id.toLowerCase()]
       }
+
       return [
           '<a'
         , ' href="', anchorObj.href, '"'
         , anchorObj.title ? (' title=' + anchorObj.title) : ''
         , '>'
-        , anchorObj.text
+        , this.text
         , '</a>'
       ].join('')
     }

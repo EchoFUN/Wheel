@@ -35,10 +35,35 @@ describe('test Anchor init', function() {
     expect(anchor.line).toBe(line)
     expect(anchor.text).toBe('content')
     expect(anchor.attr).toBe('[id]')
-    expect(anchor.type).toBe('id')
     expect(anchor.id).toBe('id')
     expect(anchor.href).not.toBeDefined()
     expect(anchor.title).not.toBeDefined()
+  })
+
+  it ('should init the definition[id] of anchor', function() {
+    var line = '[foo]: http://google.com "Google"'
+      , anchor = new Anchor(line)
+
+    expect(anchor.id).toBe('foo')
+    expect(anchor.href).toBe('http://google.com')
+    expect(anchor.title).toBe('"Google"')
+  })
+
+  it ('shoud init the unstandard id of anchor', function() {
+    var line = '[foo]: http://google.com'
+      , anchor = new Anchor(line)
+
+    expect(anchor.id).toBe('foo')
+    expect(anchor.href).toBe('http://google.com')
+    expect(anchor.title).not.toBeDefined()
+  })
+
+  it('should match while using <http://google.com> type link', function() {
+    var line = '[foo]: <http://google.com> "Google"'
+      , anchor = new Anchor(line)
+    expect(anchor.id).toBe('foo')
+    expect(anchor.href).toBe('http://google.com')
+    expect(anchor.title).toBe('"Google"')
   })
 })
 
@@ -68,12 +93,25 @@ describe('test anchor parse', function() {
       , idLine = '[content][myId]'
       , anchor = new Anchor(line)
       , anchorHTML = '<a href="http://google.com" title="google.inc">content</a>'
-      , id = 'myId'
+      , id = 'myid'
       , idAnchor = new Anchor(idLine)
+
       Anchor.mapping[id] = anchor
 
     expect(idAnchor.parse()).toBe(anchorHTML)
   })
 
+  it ('should parse the anchor with simple id', function() {
+    var
+      line = '[myid](http://google.com "google.inc")'
+      , idLine = '[myid][]'
+      , anchor = new Anchor(line)
+      , anchorHTML = '<a href="http://google.com" title="google.inc">myid</a>'
+      , id = 'myid'
+      , idAnchor = new Anchor(idLine)
 
+    Anchor.mapping[id] = anchor
+
+    expect(idAnchor.parse()).toBe(anchorHTML)
+  })
 })

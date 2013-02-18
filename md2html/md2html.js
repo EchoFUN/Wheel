@@ -9,8 +9,11 @@ var TITLE_REGEXP = /^([#]{1,6})\s*([^#\s][\w\W]*[^#])([#]*)/
   , UL_LIST_REGEXP = /^([*+-])((\s+)[\W\w]+|[^+*-][\w\W]*)/
   , OL_LIST_REGEXP = /^(\d+)\.(\s*)([\W\w]*)/
   , INDENT_REGEXP  = /^(\s{4}|\t)+/
+  , H1_UNDERLINE_REGEXP = /^[=]{3,}$/
+  , H2_UNDERLINE_REGEXP = /^[-]{3,}$/
 
-var ANCHOR_REGEXP = /(\[([^\]]+)\]\s?(\[([^\]]+)\]|\(([\w\/\:\.]+)\s*([^)]+)*?\)))/
+var ANCHOR_REGEXP = /(\[([^\]]+)\]\s?(\[([^\]]*)\]|\(([\w\/\:\.]+)\s*([^)]+)*?\)))/
+  , ANCHOR_DEF_REGEXP = /^\[([^\]]+)\]\s*:\s*([\S]+|<[^>]+>)(\s+("[^"]+"|'[^']+'|\([^\)]+\)))?$/
 
 function md2html(mdStr) {
 
@@ -35,6 +38,10 @@ function isCodeBlockEnd(line) {
 
 function isBlockQuote(line) {
   return BLOCKQUOTE_REGEXP.test(line)
+}
+
+function isAnchorDef(line) {
+  return ANCHOR_DEF_REGEXP.test(line)
 }
 
 function getCodeLang(title) {
@@ -130,6 +137,20 @@ function buildTitle(lines, i, root) {
   root.children.push(title)
   return title;
 }
+
+
+function buildSingleLineHn(lines, i, root, n) {
+  var title = null
+  if (lines[i - 1] &&
+      root.children[root.children.length - 1] instanceof Paragraph) {
+    title = new Title()
+    title.tagName = 'h' + n
+    title.push(lines[i - 1])
+    root.children[root.children.length - 1] = title
+    title.parent = root
+  }
+  return title;
+}
 /**
  * 构建文档树
  * @param root
@@ -154,6 +175,12 @@ function buildBlockTree(root, lines) {
     else if (isTitle(lines[i])) {
       title = buildTitle(lines, i, root);
     }
+    else if (H1_UNDERLINE_REGEXP.test(lines[i]) && lines[i-1].trim()) {
+      title = buildSingleLineHn(lines, i, root, 1);
+    }
+    else if (H2_UNDERLINE_REGEXP.test(lines[i]) && lines[i-1].trim) {
+      title = buildSingleLineHn(lines, i, root, 2);
+    }
     // > this is block quote
     // > this is block quote again
     else if (isBlockQuote(lines[i])) {
@@ -165,6 +192,10 @@ function buildBlockTree(root, lines) {
     else if (listType = getListType(lines[i])) {
       ret = buildList(listType, lines, i, root);
       i = ret.i;
+    }
+    // Anchor Definition
+    else if (isAnchorDef(lines[i])) {
+      new Anchor(lines[i])
     }
     else {
       paragraph = new Paragraph()

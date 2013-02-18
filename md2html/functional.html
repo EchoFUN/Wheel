@@ -11,7 +11,7 @@
   window.onload = function() {
     document.body.innerHTML = md2html([
         '### this is title'
-      , 'this is paragraph'
+      , 'this is paragraph [Google](http://google.com)'
       , '* this is ul'
       , '*this is ul again'
       , 'this is paragraph again'
@@ -24,6 +24,12 @@
       , '}'
       , '```'
       , '# h1 again'
+      , 'this is also h1'
+      , '================'
+      , ''
+      , '================'
+      , 'This is h2'
+      , '----------------'
     ].join('\n'))
   }
 

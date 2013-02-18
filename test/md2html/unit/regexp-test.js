@@ -301,6 +301,18 @@ describe('anchor test suite', function() {
     expect(line.match(ANCHOR_REGEXP)[6]).not.toBeDefined()
   })
 
+  it ('should match [content][]', function() {
+    var line = '[content][]'
+    expect(ANCHOR_REGEXP.test(line)).toBe(true)
+    expect(line.match(ANCHOR_REGEXP)[1]).toBe(line)
+    expect(line.match(ANCHOR_REGEXP)[2]).toBe('content')
+    expect(line.match(ANCHOR_REGEXP)[3]).toBe('[]')
+    expect(line.match(ANCHOR_REGEXP)[4]).toBe('')
+    expect(line.match(ANCHOR_REGEXP)[5]).not.toBeDefined()
+    expect(line.match(ANCHOR_REGEXP)[6]).not.toBeDefined()
+  })
+
+
   it ('should match [content] [id]', function() {
     var line = '[content] [id]'
     expect(ANCHOR_REGEXP.test(line)).toBe(true)

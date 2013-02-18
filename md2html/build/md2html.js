@@ -428,7 +428,8 @@ function buildBlockQuote(lines, i, root) {
   }
   root.children.push(blockQuote)
   blockQuote.parent = root
-  buildBlockTree(blockQuote, blockQuote.lines)
+  blockQuote = buildBlockTree(blockQuote, blockQuote.lines)
+  blockQuote.lines = []
   return {blockQuote:blockQuote, i:i-1};
 }
 

@@ -44,3 +44,7 @@ var html = md2html(str)
 
 文本 -----> 逐行解析 -----> markdown块元素树 -----> 解析树
 
+
+### Test ###
+
+测试用例在 wheel/test 的同名目录下，如何测试请看 wheel/README.md

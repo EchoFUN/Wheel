@@ -6,9 +6,3 @@
 
 })("Queue", this, function(name, root, undefined) {
   "use strict";
-
-
-
-  /**
-   *
-   */

@@ -1,13 +1,29 @@
 var toArray = [].slice
 
+/**
+ * check argument number
+ * @param {Number} obj
+ * @return {Boolean} if is Number
+ */
 function isNumber(obj) {
   return '[object Number]' === toString.call(obj)
 }
 
+/**
+ * check the argument if it's a function object
+ * @param obj
+ * @return {Boolean}
+ */
 function isFunction(obj) {
   return (typeof obj) == 'function'
 }
 
+/**
+ * iterator for array
+ * @param {Array} arr
+ * @param {Function} fn the iterator
+ * @param {Object} context the this pointer of fn
+ */
 function each(arr, fn, context) {
   if (arr.forEach) {
     arr.forEach(fn, context)
@@ -19,6 +35,23 @@ function each(arr, fn, context) {
   }
 }
 
+/**
+ * ### parse the async args ###
+ *
+ * #### for examples ####
+ *
+ * @example parseAsyncArgs([fn,delay])
+ *          parseAsyncArgs([fn,fn,fn,fn,fn])
+ *          parseAsyncArgs([fn,fn,fn,delay])
+ *          parseAsyncArgs([fn,fn,fn,delay,context])
+ *          parseAsyncArgs([fn,fn,fn,context])
+ *          parseAsyncArgs([fn, delay, context])
+ *          parseAsyncArgs([fn, context])
+ *
+ * @param args
+ * @return {{fn: Function, delay: Number, context: Object}}
+ * @throws {Error} "parseAsyncArgs: arguments not correct"
+ */
 function parseAsyncArgs(args) {
   var asyncFuncs = []
   if (isAllFunction(args)) {
@@ -62,6 +95,11 @@ function parseAsyncArgs(args) {
   }
 }
 
+/**
+ * wrap the retFn's functions to standard normal Queue Function
+ * @param {Array|Function} retFn
+ * @return {Function} normal Queue Function
+ */
 function wrapAsyncFunctionGroup(retFn) {
   var totalAsyncFuncCount = retFn.length
     , outerNext
@@ -105,6 +143,11 @@ function wrapAsyncFunctionGroup(retFn) {
 
 }
 
+/**
+ * check the args if there're functions
+ * @param {Array} args
+ * @return {Boolean}
+ */
 function isAllFunction(args) {
   var total = args.length,
       counter = 0

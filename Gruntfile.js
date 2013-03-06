@@ -2,7 +2,7 @@ module.exports = function(grunt) {
 
   grunt.initConfig({
     concat: {
-      dist: {
+      'datePicker': {
         src: [
           'ui-date-picker/intro.js',
           'ui-date-picker/date-util.js',
@@ -12,17 +12,18 @@ module.exports = function(grunt) {
         dest:  'ui-date-picker/date-picker.js'
       },
 
-      dist: {
+      'queue': {
         src: [
           'Queue/intro.js',
+          'Queue/utils.js',
           'Queue/Queue.js',
           'Queue/outro.js'
         ],
-        dest: 'Queue/queue-dev.js'
+        dest: 'Queue/build/queue-dev.js'
 
       },
 
-      dist: {
+      'md2html': {
         src: [
           'md2html/intro.js',
           'md2html/element.js',
@@ -56,7 +57,7 @@ module.exports = function(grunt) {
   });
 
   grunt.loadNpmTasks('grunt-contrib-concat');
-//  grunt.loadNpmTasks('grunt-contrib-less');
+  //  grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('gruntacular');
 

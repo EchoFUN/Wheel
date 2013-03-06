@@ -17,7 +17,9 @@ files = [
 
   // Queue test
   '../Queue/Queue.js',
+  '../Queue/utils.js',
   'Queue/unit/queue-test.js',
+  'Queue/unit/utils-test.js',
 
   //md2html test
   '../md2html/element.js',
@@ -67,7 +69,7 @@ autoWatch = true;
 // - Safari (only Mac)
 // - PhantomJS
 // - IE (only Windows)
-browsers = ['Chrome', 'PhantomJS', 'Safari'];
+browsers = ['PhantomJS'];
 
 
 // If browser does not capture in given timeout [ms], kill it

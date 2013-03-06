@@ -1,3 +1,5 @@
+"use strict"
+
 /**
  *
  * Sync Queue Test Suite
@@ -259,6 +261,52 @@ describe('Async Push Test Suite', function() {
 
 });
 
+describe('mutiple async test suite', function() {
+  it('should run mupitle async function and return mutiple result', function() {
+    var q = Queue()
+      , passed = false
+
+    runs(function() {
+      q.pushAsync(
+        function(next) {
+          setTimeout(function() {
+            next(1)
+          }, 10)
+        },
+        function(next) {
+          setTimeout(function() {
+            next(2)
+          }, 5)
+        },
+        function(next) {
+          setTimeout(function() {
+            next(3)
+          }, 1)
+        },
+        function(next) {
+          setTimeout(function() {
+            next("hahaha")
+          }, 1)
+        })
+        .pushSync(function(one, two, three, hahaha) {
+          console.log(one, two, three, hahaha)
+          passed = [one, two, three, hahaha]
+        })
+        .exec()
+    })
+
+    waitsFor(function() {
+      return passed && passed.length === 4
+    }, 'it should be done in 1 sec', 1000)
+
+    runs(function() {
+      expect(passed[0]).toBe(1)
+      expect(passed[1]).toBe(2)
+      expect(passed[2]).toBe(3)
+      expect(passed[3]).toBe('hahaha')
+    })
+  })
+})
 
 
 

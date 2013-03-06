@@ -12,16 +12,7 @@ function Queue() {
   "use strict";
 
   var fnQueue = []
-    , toArray = Array.prototype.slice
     , toString = Object.prototype.toString
-
-  function isNumber(obj) {
-    return '[object Number]' === toString.call(obj)
-  }
-
-  function isFunction(obj) {
-    return '[object Function]' === toString.call(obj)
-  }
 
   function Executor(fnType, fn, context) {
     if (this instanceof Executor) {
@@ -75,8 +66,14 @@ function Queue() {
    * @param context
    */
   function pushAsync(fn, delayMillSec, context) {
-    var executor = Executor('async', fn, context)
-    push(executor, delayMillSec)
+    var args = toArray.call(arguments)
+      , executor
+      , ret
+    ret = parseAsyncArgs(args)
+    ret.fn = wrapAsyncFunctionGroup(ret.fn)
+
+    executor = Executor('async', ret.fn, ret.context)
+    push(executor, ret.delay)
     return this
   }
 
@@ -130,11 +127,8 @@ function Queue() {
   return {
 
       pushSync: pushSync
-
     , pushAsync: pushAsync
-
     , delay: delay
-
     , exec: exec
 
   }

@@ -1,5 +1,10 @@
-(function(window, undefined) {
+(function(root, undefined) {
   "use strict";
+
+
+  /**
+   *
+   */
 /**
  * Queue
  *
@@ -16,15 +21,6 @@ function Queue() {
   var fnQueue = []
     , toArray = Array.prototype.slice
     , toString = Object.prototype.toString
-
-  function isNumber(obj) {
-    return '[object Number]' === toString.call(obj)
-  }
-
-  function isFunction(obj) {
-    return '[object Function]' === toString.call(obj)
-  }
-
 
   function Executor(fnType, fn, context) {
     if (this instanceof Executor) {
@@ -78,7 +74,11 @@ function Queue() {
    * @param context
    */
   function pushAsync(fn, delayMillSec, context) {
-    var executor = Executor('async', fn, context)
+    var args = toArray.call(arguments)
+      , executor
+
+
+    executor = Executor('async', fn, context)
     push(executor, delayMillSec)
     return this
   }
@@ -142,5 +142,8 @@ function Queue() {
 
   }
 }
+// expose
+
+root.Queue = Queue
 
 })(window);

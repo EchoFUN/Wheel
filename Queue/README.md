@@ -86,6 +86,30 @@ q
   .exec()
 ```
 
+在插入异步方法的时候，如果两个异步方法可以并行操作，那么可以这么玩
+
+```js
+q
+  .pushAsync(
+    function(next) {
+      setTimeout(function() {
+        next(1)
+      },100)
+    },
+    function(next) {
+      setTimeout(function() {
+        next(2)
+      }, 50)
+  })
+  .pushSync(function(retValOne, retValTwo) {
+    console.log(retValOne, retValTwo)    //-----> output: 1, 2
+  })
+  .exec()
+```
+
+那么这样在上一步所有的并发请求都完成以后才执行下一步操作
+
+
 ### Delay ###
 
 延迟执行，类似 sleep，让任务中断一段时间，在delay前后的返回值会继续向下传递
@@ -147,3 +171,7 @@ q
 
 这些就是Queue的所有使用方法，接口简单。....
 
+
+### 更新日志 ###
+
+2013/03/06 ----------------- 增加对异步方法并行操作的支持

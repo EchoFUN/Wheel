@@ -94,7 +94,6 @@ function Queue() {
     return this
   }
 
-
   function next() {
     var args = toArray.call(arguments, 0)
       , executor = fnQueue.shift()

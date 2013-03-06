@@ -9,7 +9,7 @@ module.exports = function(grunt) {
           'ui-date-picker/date-picker-calendar.js',
           'ui-date-picker/outtro.js'
         ],
-        dest:  'ui-date-picker/date-picker.js'
+        dest:  'ui-date-picker/build/date-picker.js'
       },
 
       'queue': {

@@ -1,5 +1,5 @@
 // expose
 
-root.Queue = Queue
+return Queue
 
-})(window);
+})
